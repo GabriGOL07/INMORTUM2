@@ -27,7 +27,19 @@ int estado6a;
 int estado6b;
 int estat_ajuda;
 
+const int sirena = A5;
+const int led1 = A0;
+const int led2 = A1;
+const int led3 = A2;
+const int led4 = A3;
+const int led5 = A4;
 void setup() {
+  pinMode(led1,OUTPUT);
+  pinMode(led2,OUTPUT);
+  pinMode(led3,OUTPUT);
+  pinMode(led4,OUTPUT);
+  pinMode(led5,OUTPUT);
+  pinMode(sirena, OUTPUT);
   Serial.begin(9600);
   pinMode(interruptor1a, INPUT_PULLUP);
   pinMode(interruptor1b, INPUT_PULLUP);
@@ -44,45 +56,37 @@ void setup() {
   pinMode(ajuda,INPUT_PULLUP);
 }
 
+void leds(){
+  for (int i=0; i<5 ;i++){
+    digitalWrite(led1, HIGH);
+    delay(100);
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, HIGH);
+    delay(100);
+    digitalWrite(led2, LOW);
+    digitalWrite(led3, HIGH);
+    delay(100);
+    digitalWrite(led3, LOW);
+    digitalWrite(led4, HIGH);
+    delay(100);
+    digitalWrite(led4, LOW);
+    digitalWrite(led5, HIGH);
+    delay(100);
+    digitalWrite(led5, LOW);
+  }
+}
+
+void principi(){
+  digitalWrite(sirena, LOW);
+}
+
 void loop() {
-  estado1a = digitalRead(interruptor1a);
-  estado1b = digitalRead(interruptor1b);
-  estado2a = digitalRead(interruptor2a);
-  estado2b = digitalRead(interruptor2b);
-  estado3a = digitalRead(interruptor3a);
-  estado3b = digitalRead(interruptor3b);
-  estado4a = digitalRead(interruptor4a);
-  estado4b = digitalRead(interruptor4b);
-  estado5a = digitalRead(interruptor5a);
-  estado5b = digitalRead(interruptor5b);
-  estado6a = digitalRead(interruptor6a);
-  estado6b = digitalRead(interruptor6b);
-  estat_ajuda = digitalRead(ajuda);
-  Serial.print("Interruptor 1a: ");
-  Serial.println(estado1a);
-  Serial.print("Interruptor 1b: ");
-  Serial.println(estado1b);
-  Serial.print("Interruptor 2a: ");
-  Serial.println(estado2a);
-  Serial.print("Interruptor 2b: ");
-  Serial.println(estado2b);
-  Serial.print("Interruptor 3a: ");
-  Serial.println(estado3a);
-  Serial.print("Interruptor 3b: ");
-  Serial.println(estado3b);
-  Serial.print("Interruptor 4a: ");
-  Serial.println(estado4a);
-  Serial.print("Interruptor 4b: ");
-  Serial.println(estado4b);
-  Serial.print("Interruptor 5a: ");
-  Serial.println(estado5a);
-  Serial.print("Interruptor 5b: ");
-  Serial.println(estado5b);
-  Serial.print("Interruptor 6a: ");
-  Serial.println(estado6a);
-  Serial.print("Interruptor 6b: ");
-  Serial.println(estado6b);
-  Serial.print("Interruptor ajuda: ");
-  Serial.println(estat_ajuda);
-  delay(3000);
+  principi();
+  digitalWrite(sirena, HIGH);
+  delay(5000);
+  digitalWrite(sirena, LOW);
+  Serial.print("ep");
+  delay(5000);
+  
+ 
 }

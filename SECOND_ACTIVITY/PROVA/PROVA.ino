@@ -35,7 +35,7 @@ int estat_ajuda;
 int state = 0;
 
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   pinMode(interruptor1a, INPUT_PULLUP);
   pinMode(interruptor1b, INPUT_PULLUP);
   pinMode(interruptor2a, INPUT_PULLUP);
@@ -72,33 +72,6 @@ void comprovar_estat(){
   estado6a = digitalRead(interruptor6a);
   estado6b = digitalRead(interruptor6b);
   estat_ajuda = digitalRead(ajuda);
-  Serial.print("Interruptor 1a: ");
-  Serial.println(estado1a);
-  Serial.print("Interruptor 1b: ");
-  Serial.println(estado1b);
-  Serial.print("Interruptor 2a: ");
-  Serial.println(estado2a);
-  Serial.print("Interruptor 2b: ");
-  Serial.println(estado2b);
-  Serial.print("Interruptor 3a: ");
-  Serial.println(estado3a);
-  Serial.print("Interruptor 3b: ");
-  Serial.println(estado3b);
-  Serial.print("Interruptor 4a: ");
-  Serial.println(estado4a);
-  Serial.print("Interruptor 4b: ");
-  Serial.println(estado4b);
-  Serial.print("Interruptor 5a: ");
-  Serial.println(estado5a);
-  Serial.print("Interruptor 5b: ");
-  Serial.println(estado5b);
-  Serial.print("Interruptor 6a: ");
-  Serial.println(estado6a);
-  Serial.print("Interruptor 6b: ");
-  Serial.println(estado6b);
-  Serial.print("Interruptor ajuda: ");
-  Serial.println(estat_ajuda);
-  delay(1000);
 }
 
 void leds(){
@@ -122,14 +95,14 @@ void leds(){
   
 }
 void loop() {
-  
+  digitalWrite(sirena,LOW);
   switch (state){
     case 0: // no esta correcte la combinació
       digitalWrite(sirena, LOW);
       //Serial.println("Estat 0");
       digitalWrite(led1, LOW);
       comprovar_estat();
-      if  (estado1a == LOW && estado1b == HIGH && estado2a == LOW && estado2b == HIGH && estado3a == LOW && estado3b == HIGH && estado4a == LOW && estado4b == HIGH && estado5a == LOW && estado5b == HIGH && estado6a == LOW && estado6b == HIGH || ajuda == LOW){
+      if  ((estado1a == LOW && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == HIGH && estado4b == LOW && estado5a == LOW && estado5b == HIGH && estado6a == LOW && estado6b == HIGH) || ajuda == LOW){
         state = 1;
       }else{
         state = 0;
@@ -146,7 +119,21 @@ void loop() {
       //Serial.println("Estat 2");
       digitalWrite(sirena, LOW);
       comprovar_estat();
-      if (estado1a == HIGH && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == HIGH && estado4b == HIGH && estado5a == HIGH && estado5b == HIGH && estado6a == HIGH && estado6b == HIGH){
+      if (estado1a == LOW && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == LOW && estado4b == HIGH && estado5a == LOW && estado5b == HIGH && estado6a == HIGH && estado6b == LOW){
+        state = 0;
+        digitalWrite(led1,HIGH);
+        digitalWrite(led2,HIGH);
+        digitalWrite(led3,HIGH);
+        digitalWrite(led4,HIGH);
+        digitalWrite(led5,HIGH);
+        delay(2000);
+        digitalWrite(led1,LOW);
+        digitalWrite(led2,LOW);
+        digitalWrite(led3,LOW);
+        digitalWrite(led4,LOW);
+        digitalWrite(led5,LOW);
+        
+      }else if (ajuda == LOW){
         state = 0;
       }else{
         state = 2;
