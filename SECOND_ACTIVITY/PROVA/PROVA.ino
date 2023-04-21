@@ -10,7 +10,7 @@ const int interruptor5a = 10;
 const int interruptor5b = 11;
 const int interruptor6a = 12;
 const int interruptor6b = 13;
-const int ajuda = 1;
+const int ajuda = 0;
 const int led1 = A0;
 const int led2 = A1;
 const int led3 = A2;
@@ -35,7 +35,7 @@ int estat_ajuda;
 int state = 0;
 
 void setup() {
-  //Serial.begin(9600);
+  Serial.begin(9600);
   pinMode(interruptor1a, INPUT_PULLUP);
   pinMode(interruptor1b, INPUT_PULLUP);
   pinMode(interruptor2a, INPUT_PULLUP);
@@ -48,13 +48,14 @@ void setup() {
   pinMode(interruptor5b, INPUT_PULLUP);
   pinMode(interruptor6a, INPUT_PULLUP);
   pinMode(interruptor6b, INPUT_PULLUP);
-  pinMode(ajuda,INPUT_PULLUP);
+  pinMode(ajuda,INPUT);
   pinMode(led1,OUTPUT);
   pinMode(led2,OUTPUT);
   pinMode(led3,OUTPUT);
   pinMode(led4,OUTPUT);
   pinMode(led5,OUTPUT);
   pinMode(sirena,OUTPUT);
+  pinMode(1,OUTPUT);
   
 }
 
@@ -72,10 +73,11 @@ void comprovar_estat(){
   estado6a = digitalRead(interruptor6a);
   estado6b = digitalRead(interruptor6b);
   estat_ajuda = digitalRead(ajuda);
+  //Serial.print(estat_ajuda);
 }
 
 void leds(){
-  for (int i=0; i<20 ;i++){
+  for (int i=0; i<20;i++){
     digitalWrite(led1, HIGH);
     delay(100);
     digitalWrite(led1, LOW);
@@ -95,14 +97,29 @@ void leds(){
   
 }
 void loop() {
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+  digitalWrite(led5, LOW);
   digitalWrite(sirena,LOW);
+  delay(10000);
+  while(1){
+    
   switch (state){
+    
     case 0: // no esta correcte la combinació
       digitalWrite(sirena, LOW);
-      //Serial.println("Estat 0");
       digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+      digitalWrite(led4, LOW);
+      digitalWrite(led5, LOW);     
+      //Serial.println("Estat 0");
       comprovar_estat();
-      if  ((estado1a == LOW && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == HIGH && estado4b == LOW && estado5a == LOW && estado5b == HIGH && estado6a == LOW && estado6b == HIGH) || ajuda == LOW){
+      if (estat_ajuda == LOW){
+        state = 1;
+      }else if  (estado1a == LOW && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == HIGH && estado4b == LOW && estado5a == LOW && estado5b == HIGH && estado6a == LOW && estado6b == HIGH){
         state = 1;
       }else{
         state = 0;
@@ -110,14 +127,20 @@ void loop() {
       break;     
     case 1: // acertada combinació
       //Serial.println("Estat 1");
+      state = 2;
       digitalWrite(sirena, HIGH);
       leds();      
       digitalWrite(sirena, LOW);
-      state = 2;
+      
       break;
     case 2: // ha acabat la sirena i els leds pero segueixen els pusladors al seu lloc, falta reiniciar
       //Serial.println("Estat 2");
       digitalWrite(sirena, LOW);
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+      digitalWrite(led4, LOW);
+      digitalWrite(led5, LOW);
       comprovar_estat();
       if (estado1a == LOW && estado1b == HIGH && estado2a == HIGH && estado2b == HIGH && estado3a == HIGH && estado3b == HIGH && estado4a == LOW && estado4b == HIGH && estado5a == LOW && estado5b == HIGH && estado6a == HIGH && estado6b == LOW){
         state = 0;
@@ -126,18 +149,16 @@ void loop() {
         digitalWrite(led3,HIGH);
         digitalWrite(led4,HIGH);
         digitalWrite(led5,HIGH);
-        delay(2000);
+        delay(1000);
         digitalWrite(led1,LOW);
         digitalWrite(led2,LOW);
         digitalWrite(led3,LOW);
         digitalWrite(led4,LOW);
         digitalWrite(led5,LOW);
-        
-      }else if (ajuda == LOW){
-        state = 0;
       }else{
         state = 2;
       }
       break;
+  }
   }
 }
